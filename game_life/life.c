@@ -1,5 +1,5 @@
 #include "sim.h"
-#define REPEAT_SIZE 1024
+#define REPEAT_SIZE 1
 
 void drawGen(unsigned *nextGen)
 {
