@@ -14,7 +14,7 @@ g++ life.o sim.o -o game -g -lsfml-graphics -lsfml-window -lsfml-system
 ## Get stats about instructions
 1. To get stats about instructions you can instrument game via llvm pass by running:
 ```
-bash compile.sh
+bash instrumentation.sh
 ./a.out
 ```
 2. Pass will count number of uses of each instruction in runtime:
