@@ -40,3 +40,4 @@ uitofp 1920000
 urem 480000
 zext 9837000
 ```
+![image](https://github.com/ivan-egorov42/llvm-course/blob/master/stats.png?raw=true)
