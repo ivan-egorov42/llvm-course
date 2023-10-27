@@ -15,7 +15,6 @@ GRAPHICS_O=sim.o
 PASS_SOURCE=llvm-pass-track.cpp
 PASS_O=pass.o
 PASS_SO=libPass.so
-EXEC_PATH=execution_path.log
 
 all: game
 
