@@ -14,8 +14,8 @@ struct MyPass : public FunctionPass {
   static char ID;
   MyPass() : FunctionPass(ID) {}
 
-  bool isFuncLogger(StringRef name) {
-    return name == "_Z10insnLoggerPcl" ||
+  bool isFuncLogger(StringRef name) { 
+    return name == "_Z10insnLoggerPclm" ||
            name == "_Z4dumpv";
   }
 
@@ -34,7 +34,7 @@ struct MyPass : public FunctionPass {
     //     outs() << "\n";
     //   }
     //   outs() << "\n";
-    // }
+    // }  
 
     LLVMContext &Ctx = F.getContext();
     IRBuilder<> builder(Ctx);
@@ -42,11 +42,13 @@ struct MyPass : public FunctionPass {
 
     ArrayRef<Type *> insnLogParamTypes = {
         builder.getInt8Ty()->getPointerTo(),
-        Type::getInt64Ty(Ctx)};
+        Type::getInt64Ty(Ctx),
+        Type::getInt32Ty(Ctx)
+        };
     FunctionType *insnLogFuncType =
         FunctionType::get(retType, insnLogParamTypes, false);
     FunctionCallee insnLogFunc = F.getParent()->getOrInsertFunction(
-        "_Z10insnLoggerPcl", insnLogFuncType);
+        "_Z10insnLoggerPclm", insnLogFuncType);
 
     ArrayRef<Type *> dumpParamTypes = {};
     FunctionType *dumpFuncType = FunctionType::get(retType, dumpParamTypes, false);
@@ -72,7 +74,8 @@ struct MyPass : public FunctionPass {
 
             builder.SetInsertPoint(insn);
             Value *opName = builder.CreateGlobalStringPtr(insn->getOpcodeName());
-            Value *args[] = {opName, valueAddr};
+            Value *insnOpcode = ConstantInt::get(builder.getInt64Ty(), (int64_t)(I.getOpcode()));
+            Value *args[] = {opName, valueAddr, insnOpcode};
             builder.CreateCall(insnLogFunc, args);
 
             if (auto *ret = dyn_cast<ReturnInst>(&I))
@@ -92,5 +95,5 @@ static void registerMyPass(const PassManagerBuilder &,
   PM.add(new MyPass());
 }
 static RegisterStandardPasses
-    RegisterMyPass(PassManagerBuilder::EP_EarlyAsPossible,
+    RegisterMyPass(PassManagerBuilder::EP_OptimizerLast,
                    registerMyPass);

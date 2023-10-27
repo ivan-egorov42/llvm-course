@@ -1,6 +1,9 @@
 #include "sim.h"
-#define REPEAT_SIZE 1
-
+#ifdef INSTRUMENTATION
+  #define REPEAT_SIZE 3
+#else
+  #define REPEAT_SIZE 1024
+#endif
 void drawGen(unsigned *nextGen)
 {
   simSetPixels(nextGen);
